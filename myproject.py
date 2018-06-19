@@ -264,14 +264,15 @@ def editRestaurant(restaurant_id):
         if request.method == 'POST':
             if request.form['name']:
                 editedRestaurant.name = request.form['name']
-                flash('Restaurant Successfully Edited %s' % editedRestaurant.name)
+                flash('Restaurant Successfully Edited %s'
+                      % editedRestaurant.name)
                 print(editedRestaurant.name)
                 session.add(editedRestaurant)
                 session.c()
                 return redirect(url_for('showRestaurants'))
         else:
             return render_template('editRestaurant.html',
-                               restaurant=editedRestaurant)
+                                   restaurant=editedRestaurant)
     else:
         flash("impossible")
         return redirect(url_for('showRestaurants', restaurants=restaurants))
@@ -293,10 +294,10 @@ def deleteRestaurant(restaurant_id):
             flash('%s Successfully Deleted' % restaurantToDelete.name)
             session.commit()
             return redirect(url_for('showRestaurants',
-                                restaurant_id=restaurant_id))
+                                    restaurant_id=restaurant_id))
         else:
             return render_template('deleteRestaurant.html',
-                               restaurant=restaurantToDelete)
+                                   restaurant=restaurantToDelete)
     else:
         flash("impossible")
         return redirect(url_for('showRestaurants', restaurants=restaurants))
@@ -321,20 +322,21 @@ def newMenuItem(restaurant_id):
     if 'username' not in login_session:
         return redirect('/login')
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-     if editedThing.user_id == login_session['user_id']:
+    if editedThing.user_id == login_session['user_id']:
         if request.method == 'POST':
-             newItem = MenuItem(name=request.form['name'],
-                           description=request.form['description'],
-                           price=request.form['price'],
-                           course=request.form['course'],
-                           restaurant_id=restaurant_id,
-                           user_id=restaurant.user_id)
+            newItem = MenuItem(name=request.form['name'],
+                               description=request.form['description'],
+                               price=request.form['price'],
+                               course=request.form['course'],
+                               restaurant_id=restaurant_id,
+                               user_id=restaurant.user_id)
         session.add(newItem)
         session.commit()
         flash('New Menu %s Item Successfully Created' % (newItem.name))
         return redirect(url_for('showMenu', restaurant_id=restaurant_id))
         else:
-        return render_template('newmenuitem.html', restaurant_id=restaurant_id)
+            return render_template('newmenuitem.html',
+                                   restaurant_id=restaurant_id)
     else:
         flash("impossible")
         return redirect(url_for('showRestaurants', restaurants=restaurants))
@@ -354,21 +356,21 @@ def editMenuItem(restaurant_id, menu_id):
         if request.method == 'POST':
             if request.form['name']:
                 editedItem.name = request.form['name']
-               if request.form['description']:
-                    editedItem.description = request.form['description']
-                    if request.form['price']:
-                     editedItem.price = request.form['price']
-                        if request.form['course']:
-                            editedItem.course = request.form['course']
+            if request.form['description']:
+                editedItem.description = request.form['description']
+            if request.form['price']:
+                editedItem.price = request.form['price']
+            if request.form['course']:
+                editedItem.course = request.form['course']
         session.add(editedItem)
         session.commit()
         flash('Menu Item Successfully Edited')
         return redirect(url_for('showMenu', restaurant_id=restaurant_id))
-         else:
-        return render_template('editmenuitem.html',
-                               restaurant_id=restaurant_id,
-                               menu_id=menu_id,
-                               item=editedItem)
+        else:
+            return render_template('editmenuitem.html',
+                                   restaurant_id=restaurant_id,
+                                   menu_id=menu_id,
+                                   item=editedItem)
     else:
         flash("impossible")
         return redirect(url_for('showRestaurants', restaurants=restaurants))
